@@ -1,6 +1,6 @@
-# germanmealbrowser
+# Mensa App
 
-A new Flutter project.
+This is a mensa app using Flutter and data from openmensa.org
 
 ## Getting Started
 
