@@ -19,7 +19,7 @@ class CanteenDetailView extends StatefulWidget {
 
 class _CanteenDetailViewState extends State<CanteenDetailView>
     with WidgetsBindingObserver
-    implements CanteenDetailViewContract  {
+    implements CanteenDetailViewContract {
   CanteenDetailPresenter _presenter;
   List<Meal> _meals;
   bool _isLoading;
@@ -30,8 +30,6 @@ class _CanteenDetailViewState extends State<CanteenDetailView>
   _CanteenDetailViewState() {
     _presenter = new CanteenDetailPresenter(this);
   }
-
-
 
   @override
   void initState() {
