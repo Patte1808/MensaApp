@@ -39,12 +39,7 @@ class MensaApiImpl extends MensaApi {
 
   _requestMealsForCanteenById(int id, DateTime date) async {
     var formattedDate = StringUtils.formatDateToApiFormat(date);
-    //var response = await http.read("$BASE_URL/canteens/$id/days/$formattedDate/meals");
-    /*
-    TODO: remove
-     */
-    var response = await http.read("$BASE_URL/canteens/$id/days/2018-02-02/meals");
-    print(response);
+    var response = await http.read("$BASE_URL/canteens/$id/days/$formattedDate/meals");
     var meals = JSON.decode(response);
 
     for(var meal in meals) {
