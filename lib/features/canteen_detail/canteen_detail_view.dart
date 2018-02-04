@@ -1,39 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:germanmealbrowser/features/canteen_detail/canteen_detail_presenter.dart';
+import 'package:germanmealbrowser/features/canteen_detail/canteen_detail_view_contract.dart';
 import 'package:germanmealbrowser/features/canteen_detail/meal_item.dart';
 import 'package:germanmealbrowser/models/canteen.dart';
 import 'package:germanmealbrowser/models/meal.dart';
 import 'package:germanmealbrowser/repository/repository_factory.dart';
 
-class CanteenDetailScreen extends StatefulWidget {
-  const CanteenDetailScreen({this.canteen});
+class CanteenDetailView extends StatefulWidget {
+  const CanteenDetailView({this.canteen});
 
   final Canteen canteen;
 
   @override
-  _CanteenDetailScreenState createState() => new _CanteenDetailScreenState();
+  _CanteenDetailViewState createState() => new _CanteenDetailViewState();
 }
 
-class _CanteenDetailScreenState extends State<CanteenDetailScreen> {
-  List<Meal> _meals = [];
+class _CanteenDetailViewState extends State<CanteenDetailView>
+    implements CanteenDetailViewContract{
+  CanteenDetailPresenter _presenter;
+  List<Meal> _meals;
+  bool _isLoading;
+
+  _CanteenDetailViewState() {
+    _presenter = new CanteenDetailPresenter(this);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    new RepositoryFactory()
-        .getMealsRepository()
-        .findAllForCanteenByDate(this.widget.canteen.id, new DateTime.now())
-        .then((canteens) => setMeals(canteens.values.toList()), onError: (e) {
-      setMeals(new List(0));
+    _isLoading = true;
+    _presenter.loadMeals(widget.canteen.id, new DateTime.now());
+  }
+
+  @override
+  void onLoadMealsComplete(List<Meal> meals) {
+    setState(() {
+      _meals = meals;
+      _isLoading = false;
     });
   }
 
-  void setMeals(List<Meal> meals) {
-    setState(() {
-      _meals = meals;
-
-      debugPrint(_meals.toString());
-    });
+  @override
+  void onLoadMealsError() {
+    // TODO: implement error handling
   }
 
   List<Widget> _mealListItems() {
@@ -74,11 +84,23 @@ class _CanteenDetailScreenState extends State<CanteenDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget widget;
+
+    if(_isLoading) {
+      widget = new Center(
+        child: new Padding(padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+          child: new CircularProgressIndicator(),),
+      );
+    } else {
+      widget = new ListView.custom(childrenDelegate: new SliverChildListDelegate(_mealListItems()));
+    }
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(this.widget.canteen.name),
       ),
-      body: new ListView.custom(childrenDelegate: new SliverChildListDelegate(_mealListItems())),
+      body: widget,
     );
   }
 }
