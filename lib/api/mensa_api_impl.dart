@@ -12,7 +12,6 @@ class MensaApiImpl extends MensaApi {
   static const BASE_URL = "https://openmensa.org/api/v2";
 
   var _canteenMap = new Map<int, Canteen>();
-  var _mealMap = new Map<int, Meal>();
 
   @override
   Future<Map<int, Canteen>> getCanteens() async {
@@ -23,9 +22,7 @@ class MensaApiImpl extends MensaApi {
 
   @override
   Future<Map<int, Meal>> getMealsForCanteenByDate(int canteenId, DateTime date) async {
-    await _requestMealsForCanteenById(canteenId, date);
-
-    return _mealMap;
+    return _requestMealsForCanteenById(canteenId, date);
   }
 
   _requestCanteens() async {
@@ -42,8 +39,12 @@ class MensaApiImpl extends MensaApi {
     var response = await http.read("$BASE_URL/canteens/$id/days/$formattedDate/meals");
     var meals = JSON.decode(response);
 
+    var _mealMap = new Map<int, Meal>();
+
     for(var meal in meals) {
       _mealMap[meal['id']] = new Meal(meal['id'], meal['name'], meal['prices'], meal['category'], meal['notes']);
     }
+
+    return _mealMap;
   }
 }

@@ -3,6 +3,7 @@ import 'package:germanmealbrowser/features/canteen_list/canteen_item.dart';
 import 'package:germanmealbrowser/features/canteen_list/canteen_list_presenter.dart';
 import 'package:germanmealbrowser/features/canteen_list/canteen_list_view_contract.dart';
 import 'package:germanmealbrowser/models/canteen.dart';
+import 'package:germanmealbrowser/models/meal.dart';
 
 class CanteenListView extends StatefulWidget {
   @override

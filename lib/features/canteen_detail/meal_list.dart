@@ -17,33 +17,42 @@ class MealList extends StatelessWidget {
     final ThemeData themeData = Theme.of(context);
     final TextStyle headerStyle = themeData.textTheme.body2.copyWith(color: themeData.accentColor);
     String mealCategory;
+    Map<String, List<Meal>> mealMap = new Map();
 
     for(Meal meal in meals) {
-
-      if(mealCategory != meal.category) {
-        if(mealCategory != null) {
-          listItems.add(const Divider());
-        }
-
-        listItems.add(
-            new MergeSemantics(
-              child: new Container(
-                height: 48.0,
-                padding: const EdgeInsetsDirectional.only(start: 16.0),
-                alignment: AlignmentDirectional.centerStart,
-                child: new SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: new Text(meal.category, style: headerStyle),
-                ),
-              ),
-            )
-        );
-
-        mealCategory = meal.category;
-      }
-      listItems.add(new MealItem(meal: meal,));
+      mealMap.putIfAbsent(meal.category, () => new List());
+      mealMap[meal.category].add(meal);
     }
+
+    mealMap.forEach((key, mealList) {
+      mealList.sort((a, b) => a.name.compareTo(b.name));
+
+      for(Meal meal in mealList) {
+        if(mealCategory != meal.category) {
+          if(mealCategory != null) {
+            listItems.add(const Divider());
+          }
+
+          listItems.add(
+              new MergeSemantics(
+                child: new Container(
+                  height: 48.0,
+                  padding: const EdgeInsetsDirectional.only(start: 16.0),
+                  alignment: AlignmentDirectional.centerStart,
+                  child: new SafeArea(
+                    top: false,
+                    bottom: false,
+                    child: new Text(meal.category, style: headerStyle),
+                  ),
+                ),
+              )
+          );
+
+          mealCategory = meal.category;
+        }
+        listItems.add(new MealItem(meal: meal,));
+      }
+    });
 
     return listItems;
   }
