@@ -18,7 +18,11 @@ class _CanteenListScreenState extends State<CanteenListScreen> {
     new RepositoryFactory()
         .getCanteensRepository()
         .findAll()
-        .then((canteens) => setCanteens(canteens.values.toList()));
+        .then((canteens) {
+      List<Canteen> canteenList = canteens.values.toList();
+      canteenList.sort((a, b) => a.city.compareTo(b.city));
+      setCanteens(canteenList);
+    });
   }
 
   void setCanteens(List<Canteen> canteens) {
@@ -27,12 +31,46 @@ class _CanteenListScreenState extends State<CanteenListScreen> {
     });
   }
 
+  List<Widget> _canteenListItems() {
+    final List<Widget> listItems = <Widget>[];
+    final ThemeData themeData = Theme.of(context);
+    final TextStyle headerStyle = themeData.textTheme.body2.copyWith(color: themeData.accentColor);
+    String city;
+    debugPrint("Trying to build list");
+    debugPrint("Canteens Length: ${_canteens.length}");
+    for(Canteen canteen in _canteens) {
+
+      debugPrint("iterating ${canteen.name}");
+      if(city != canteen.city) {
+        if(city != null) {
+          listItems.add(const Divider());
+        }
+
+        listItems.add(
+            new MergeSemantics(
+              child: new Container(
+                height: 48.0,
+                padding: const EdgeInsetsDirectional.only(start: 16.0),
+                alignment: AlignmentDirectional.centerStart,
+                child: new SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: new Text(canteen.city, style: headerStyle),
+                ),
+              ),
+            )
+        );
+
+        city = canteen.city;
+      }
+      listItems.add(new CanteenItem(canteen: canteen,));
+    }
+
+    return listItems;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return
-        new ListView.builder(
-          itemBuilder: (BuildContext context, int index) => new CanteenItem(canteen: _canteens[index]),
-          itemCount: _canteens.length,
-    );
+    return new ListView.custom(childrenDelegate: new SliverChildListDelegate(_canteenListItems()));
   }
 }

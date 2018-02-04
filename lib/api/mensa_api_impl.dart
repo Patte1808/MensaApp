@@ -33,7 +33,7 @@ class MensaApiImpl extends MensaApi {
     var canteens = JSON.decode(response);
 
     for(var canteen in canteens) {
-      _canteenMap[canteen['id']] = new Canteen(canteen['id'], canteen['name']);
+      _canteenMap[canteen['id']] = new Canteen(canteen['id'], canteen['name'], canteen['city']);
     }
   }
 
@@ -44,10 +44,11 @@ class MensaApiImpl extends MensaApi {
     TODO: remove
      */
     var response = await http.read("$BASE_URL/canteens/$id/days/2018-02-02/meals");
+    print(response);
     var meals = JSON.decode(response);
 
     for(var meal in meals) {
-      _mealMap[meal['id']] = new Meal(meal['id'], meal['name'], meal['prices'], meal['category']);
+      _mealMap[meal['id']] = new Meal(meal['id'], meal['name'], meal['prices'], meal['category'], meal['notes']);
     }
   }
 }
