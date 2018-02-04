@@ -14,7 +14,6 @@ class CanteensRepositoryImpl extends CanteensRepository {
   @override
   Future<Map<int, Canteen>> findAll() async {
     if(!_isDirty && _cache.isNotEmpty) {
-      print("Test");
       return new Future.value(_cache);
     }
 
@@ -23,8 +22,6 @@ class CanteensRepositoryImpl extends CanteensRepository {
     await api.getCanteens().then((canteens) {
       result = canteens;
     });
-
-    print(result);
 
     _cache = result;
     return new Future.value(result);
