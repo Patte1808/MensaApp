@@ -6,13 +6,27 @@ import 'package:germanmealbrowser/api/mensa_api.dart';
 class CanteensRepositoryImpl extends CanteensRepository {
 
   MensaApi api;
+  Map<int, Canteen> _cache = new Map();
+  bool _isDirty = true;
 
   CanteensRepositoryImpl(this.api);
 
   @override
-  Future<Map<int, Canteen>> findAll() {
-    return api.getCanteens().then((canteens) {
-      return canteens;
+  Future<Map<int, Canteen>> findAll() async {
+    if(!_isDirty && _cache.isNotEmpty) {
+      print("Test");
+      return new Future.value(_cache);
+    }
+
+    Map<int, Canteen> result = new Map();
+
+    await api.getCanteens().then((canteens) {
+      result = canteens;
     });
+
+    print(result);
+
+    _cache = result;
+    return new Future.value(result);
   }
 }
