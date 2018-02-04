@@ -1,34 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:germanmealbrowser/features/canteen_list/canteen_item.dart';
+import 'package:germanmealbrowser/features/canteen_list/canteen_list_presenter.dart';
+import 'package:germanmealbrowser/features/canteen_list/canteen_list_view_contract.dart';
 import 'package:germanmealbrowser/models/canteen.dart';
-import 'package:germanmealbrowser/repository/repository_factory.dart';
 
 class CanteenListScreen extends StatefulWidget {
   @override
   _CanteenListScreenState createState() => new _CanteenListScreenState();
 }
 
-class _CanteenListScreenState extends State<CanteenListScreen> {
-  List<Canteen> _canteens = [];
+class _CanteenListScreenState extends State<CanteenListScreen>
+    implements CanteenListViewContract {
+  CanteenListPresenter _presenter;
+  List<Canteen> _canteens;
+  bool _isLoading;
+
+  _CanteenListScreenState() {
+    _presenter = new CanteenListPresenter(this);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    new RepositoryFactory()
-        .getCanteensRepository()
-        .findAll()
-        .then((canteens) {
-      List<Canteen> canteenList = canteens.values.toList();
-      canteenList.sort((a, b) => a.city.compareTo(b.city));
-      setCanteens(canteenList);
+    _isLoading = true;
+    _presenter.loadCanteens();
+  }
+
+  @override
+  void onLoadCanteensComplete(List<Canteen> canteens) {
+    setState(() {
+      _canteens = canteens;
+      _isLoading = false;
     });
   }
 
-  void setCanteens(List<Canteen> canteens) {
-    setState(() {
-      _canteens = canteens;
-    });
+  @override
+  void onLoadCanteensError() {
+    // TODO: implement Error handling
   }
 
   List<Widget> _canteenListItems() {
@@ -36,11 +45,9 @@ class _CanteenListScreenState extends State<CanteenListScreen> {
     final ThemeData themeData = Theme.of(context);
     final TextStyle headerStyle = themeData.textTheme.body2.copyWith(color: themeData.accentColor);
     String city;
-    debugPrint("Trying to build list");
-    debugPrint("Canteens Length: ${_canteens.length}");
+
     for(Canteen canteen in _canteens) {
 
-      debugPrint("iterating ${canteen.name}");
       if(city != canteen.city) {
         if(city != null) {
           listItems.add(const Divider());
@@ -71,6 +78,19 @@ class _CanteenListScreenState extends State<CanteenListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.custom(childrenDelegate: new SliverChildListDelegate(_canteenListItems()));
+
+    Widget widget;
+
+    if(_isLoading) {
+      widget = new Center(
+        child: new Padding(padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+        child: new CircularProgressIndicator(),),
+      );
+    } else {
+      widget = new ListView.custom(
+          childrenDelegate: new SliverChildListDelegate(_canteenListItems()));
+    }
+
+    return widget;
   }
 }
