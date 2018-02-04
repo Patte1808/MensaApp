@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:germanmealbrowser/features/canteen_list/canteens_list_screen.dart';
+import 'package:germanmealbrowser/features/canteen_list/canteens_list_view.dart';
 import 'screens/meal_overview_screen.dart';
 
 void main() => runApp(new MyApp());
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: _pageController,
         children: <Widget>[
           new Container(
-            child: new CanteenListScreen(),
+            child: new CanteenListView(),
           ),
           new Container(
             child: new MealOverviewScreen(),

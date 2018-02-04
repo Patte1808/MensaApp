@@ -4,18 +4,18 @@ import 'package:germanmealbrowser/features/canteen_list/canteen_list_presenter.d
 import 'package:germanmealbrowser/features/canteen_list/canteen_list_view_contract.dart';
 import 'package:germanmealbrowser/models/canteen.dart';
 
-class CanteenListScreen extends StatefulWidget {
+class CanteenListView extends StatefulWidget {
   @override
-  _CanteenListScreenState createState() => new _CanteenListScreenState();
+  _CanteenListViewState createState() => new _CanteenListViewState();
 }
 
-class _CanteenListScreenState extends State<CanteenListScreen>
+class _CanteenListViewState extends State<CanteenListView>
     implements CanteenListViewContract {
   CanteenListPresenter _presenter;
   List<Canteen> _canteens;
   bool _isLoading;
 
-  _CanteenListScreenState() {
+  _CanteenListViewState() {
     _presenter = new CanteenListPresenter(this);
   }
 
