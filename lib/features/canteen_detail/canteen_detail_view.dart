@@ -18,7 +18,8 @@ class CanteenDetailView extends StatefulWidget {
 }
 
 class _CanteenDetailViewState extends State<CanteenDetailView>
-    implements CanteenDetailViewContract {
+    with WidgetsBindingObserver
+    implements CanteenDetailViewContract  {
   CanteenDetailPresenter _presenter;
   List<Meal> _meals;
   bool _isLoading;
@@ -30,9 +31,13 @@ class _CanteenDetailViewState extends State<CanteenDetailView>
     _presenter = new CanteenDetailPresenter(this);
   }
 
+
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     _isLoading = true;
     _isError = false;
@@ -43,7 +48,13 @@ class _CanteenDetailViewState extends State<CanteenDetailView>
   @override
   void dispose() {
     _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
   }
 
   void _handlePageChanged(int page) {
@@ -65,8 +76,10 @@ class _CanteenDetailViewState extends State<CanteenDetailView>
 
   @override
   void onLoadMealsError() {
-    _isLoading = false;
-    _isError = true;
+    setState(() {
+      _isLoading = false;
+      _isError = true;
+    });
   }
 
   @override

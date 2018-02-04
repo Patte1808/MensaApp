@@ -25,7 +25,6 @@ class CanteenDetailPresenter {
 
       _view.onLoadMealsComplete(mealList);
     }).catchError((onError) {
-      print(onError);
       _view.onLoadMealsError();
     });
   }
