@@ -41,6 +41,11 @@ class _CanteenListViewState extends State<CanteenListView>
     // TODO: implement Error handling
   }
 
+  @override
+  void onSetCanteenFavorite(int canteenId) {
+    _presenter.setCanteenFavorite(canteenId);
+  }
+
   List<Widget> _canteenListItems() {
     final List<Widget> listItems = <Widget>[];
     final ThemeData themeData = Theme.of(context);

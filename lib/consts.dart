@@ -1,0 +1,1 @@
+const String CANTEEN_FAVORITE_PREFS = "canteen_favorite";

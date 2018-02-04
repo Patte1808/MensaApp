@@ -2,6 +2,7 @@ name: germanmealbrowser
 description: A new Flutter project.
 
 dependencies:
+  shared_preferences:
   flutter:
     sdk: flutter
 

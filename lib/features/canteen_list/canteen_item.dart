@@ -14,8 +14,15 @@ class CanteenItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget favoriteIcon = new Icon(Icons.star);
+
+    if(canteen.isFavorite)
+      favoriteIcon = new Icon(Icons.star, color: Colors.yellow,);
+
     return new ListTile(
       title: new Text(canteen.name),
+      trailing: new IconButton(icon: favoriteIcon, onPressed: null),
       onTap: () => Navigator.of(context).push(new PageRouteBuilder(pageBuilder: (_, __, ___) => new CanteenDetailView(canteen: this.canteen,))),
     );
   }
