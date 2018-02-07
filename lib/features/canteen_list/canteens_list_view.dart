@@ -38,12 +38,24 @@ class _CanteenListViewState extends State<CanteenListView>
 
   @override
   void onLoadCanteensError() {
+    debugPrint("Error in canteens list");
     // TODO: implement Error handling
   }
 
   @override
   void onSetCanteenFavorite(int canteenId) {
     _presenter.setCanteenFavorite(canteenId);
+  }
+
+  void _onToggleFavorite(Canteen canteen) {
+    _presenter.setCanteenFavorite(canteen.id);
+
+    setState(() {
+      _canteens.map((mCanteen) {
+        if(mCanteen.id == canteen.id)
+          mCanteen.isFavorite = !mCanteen.isFavorite;
+      });
+    });
   }
 
   List<Widget> _canteenListItems() {
@@ -76,7 +88,7 @@ class _CanteenListViewState extends State<CanteenListView>
 
         city = canteen.city;
       }
-      listItems.add(new CanteenItem(canteen: canteen,));
+      listItems.add(new CanteenItem(canteen: canteen, onToggleFavorite: this._onToggleFavorite,));
     }
 
     return listItems;

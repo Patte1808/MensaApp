@@ -32,6 +32,8 @@ class MensaApiImpl extends MensaApi {
     for(var canteen in canteens) {
       _canteenMap[canteen['id']] = new Canteen(canteen['id'], canteen['name'], canteen['city']);
     }
+
+    print(_canteenMap);
   }
 
   _requestMealsForCanteenById(int id, DateTime date) async {

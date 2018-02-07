@@ -26,7 +26,7 @@ class CanteenListPresenter {
   void loadCanteens() {
     assert(_view != null);
 
-    /*_sharedPreferencesUtils
+    _sharedPreferencesUtils
         .getAllCanteenFavorites().then((favorites) {
       _repository.findAll()
           .then((canteens) {
@@ -34,14 +34,14 @@ class CanteenListPresenter {
         canteenList.sort((a, b) => a.city.compareTo(b.city));
 
         for(Canteen canteen in canteenList) {
-          if(favorites.containsKey(canteen.id))
+          if(favorites.contains(canteen.id.toString()))
             canteen.isFavorite = true;
         }
 
         _view.onLoadCanteensComplete(canteenList);
       })
           .catchError((error) => _view.onLoadCanteensError());
-    });*/
+    }).catchError((error) => _view.onLoadCanteensError());
   }
 
   void setCanteenFavorite(int canteenId) {

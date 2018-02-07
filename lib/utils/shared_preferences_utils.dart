@@ -11,20 +11,28 @@ class SharedPreferencesUtils {
 
   SharedPreferences prefs;
 
-  Future<Map<int, bool>> getAllCanteenFavorites() async {
+  Future<List<String>> getAllCanteenFavorites() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final Map<int, bool> favoriteMap = JSON.decode(prefs.getString(CANTEEN_FAVORITE_PREFS));
 
-    return new Future.value(favoriteMap);
+    List<String> favorites = prefs.getStringList(CANTEEN_FAVORITE_PREFS);
+
+    if(favorites == null)
+      favorites = [];
+
+    return new Future.value(favorites);
   }
 
   Future<Null> setCanteenFavorite(int canteenId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final Map<int, bool> favoriteMap = JSON.decode(prefs.getString(CANTEEN_FAVORITE_PREFS));
+    List<String> favorites = prefs.getStringList(CANTEEN_FAVORITE_PREFS);
 
-    favoriteMap.putIfAbsent(canteenId, () => true);
+    if(favorites == null)
+      favorites = [];
 
-    prefs.setString(CANTEEN_FAVORITE_PREFS, JSON.encode(favoriteMap));
+    if(!favorites.contains(canteenId.toString()))
+      favorites.add(canteenId.toString());
+
+    prefs.setStringList(CANTEEN_FAVORITE_PREFS, favorites);
   }
 
   Future<Null> removeCanteenFavorite(int canteenId) async {
